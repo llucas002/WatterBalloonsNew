@@ -6,6 +6,7 @@ physics.start()
 physics.setGravity( 0,5)
 
 
+
 local screen_width = display.contentWidth
 local screen_height = display.contentHeight
 local center_x = display.contentCenterX
