@@ -1,10 +1,9 @@
 display.setStatusBar(display.HiddenStatusBar)
 
 local physics = require 'physics'
-physics.setDrawMode( "hybrid" )
+--physics.setDrawMode( "hybrid" )
 physics.start()
 physics.setGravity( 0,5)
-
 
 
 local screen_width = display.contentWidth
@@ -59,18 +58,42 @@ local pedra
 local score_display
 local score = 0
 
+
+	
+
 local function init( )
 	back = display.newGroup()
 	front = display.newGroup()
 
-	background =  display.newImage('img/ceu1.png')
+	--background =  display.newImage('img/ceu1.png')
+
+	city1 = display.newImage('img/ceu1.png')
+	city1:setReferencePoint(display.BottomLeftReferencePoint)
+	city1.x = 0
+	city1.y = 435
+	city1.speed = 1
+
+	city2 = display.newImage('img/ceu2.png')
+	city2:setReferencePoint(display.BottomLeftReferencePoint)
+	city2.x = 315
+	city2.y = 435
+	city2.speed = 1
+
+	function scrollCity(self, event)
+	if self.x < -315 then
+	self.x = 315
+		else 
+			self.x = self.x - self.speed
+		end
+	end
 
 	floor = display.newImage('img/chao.png')
 	floor.y = display.contentHeight - floor.contentHeight/2
 	floor.name = 'floor'
 	physics.addBody(floor, 'static', {shape = { -160, -20, 160, -20, 160, 100, -160, 100}})
 
-	back:insert( background )
+	back:insert( city1 )
+	back:insert( city2)
 	front:insert( floor)
 
 	score_display = display.newText( 'Score: 0', 0, 0, nil, 20 )
@@ -161,9 +184,15 @@ end
 
 
 local function add_listeners()
-	background:addEventListener( 'tap', shot )	
+	--background:addEventListener( 'tap', shot )	
 	Runtime:addEventListener( 'enterFrame', update)
 	Runtime:addEventListener('collision', collision)
+
+	city1.enterFrame = scrollCity
+	Runtime:addEventListener('enterFrame', city1)
+
+	city2.enterFrame = scrollCity
+	Runtime:addEventListener('enterFrame', city2)
 end
 
 
