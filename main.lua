@@ -33,10 +33,10 @@ local data_sprite = {
 
 local function create_balloon()
 	local cor = {
-		--'azul',
-		'vermelho'
-		--'verde',
-		--'amarelo'
+		'azul',
+		'vermelho',
+		'verde',
+		'amarelo'
 	}
 	local posicao = math.random( #cor )
 	local image_sheet = graphics.newImageSheet( 'img/b'.. cor[posicao].. '.png', data_sheet )
@@ -79,11 +79,11 @@ local function init( )
 	city2.y = 435
 	city2.speed = 1
 
-	function scrollCity(self, event)
-	if self.x < -315 then
-	self.x = 315
+	function scrollCity(background)
+	if background.x < -315 then
+	background.x = 315
 		else 
-			self.x = self.x - self.speed
+			background.x = background.x - background.speed
 		end
 	end
 
@@ -116,6 +116,7 @@ local function init( )
 			event.other:play()
 			event.other.isAlive = false
 			local agua = display.newCircle(event.other.x, event.other.y + 20, 30)
+			agua:setFillColor( 50,50, 255)
 			back:insert(agua)
 			agua.isSensor = true
 			agua.name = 'agua'
@@ -175,6 +176,9 @@ local function update()
 		pedra.sin = 0
 		pedra.can_shot = true
 	end
+	scrollCity(city1)
+	scrollCity(city2)
+
 end
 
 
@@ -184,15 +188,9 @@ end
 
 
 local function add_listeners()
-	--background:addEventListener( 'tap', shot )	
+	Runtime:addEventListener( 'tap', shot )	
 	Runtime:addEventListener( 'enterFrame', update)
 	Runtime:addEventListener('collision', collision)
-
-	city1.enterFrame = scrollCity
-	Runtime:addEventListener('enterFrame', city1)
-
-	city2.enterFrame = scrollCity
-	Runtime:addEventListener('enterFrame', city2)
 end
 
 
