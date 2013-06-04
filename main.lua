@@ -31,6 +31,21 @@ local data_sprite = {
 	}
 }
 
+local data_sheet_planta = {
+	width = 254,
+	height = 43,
+	sheetContentWidth = 60,
+	sheetContentHeight = 44,
+	numFrames = 4
+}
+
+local data_sprite_plantas = {
+	name = 'crescendo',
+	start = 1,
+	count = 1,
+	time = 100
+}
+
 local function create_balloon()
 	local cor = {
 		'azul',
@@ -102,13 +117,18 @@ local function init( )
 	score_display:setTextColor( 255, 255, 0 )
 
 
-	pedra = display.newCircle( 0, 0, 10 )
-	pedra.x = screen_center_x
-	pedra.y = screen_height - 20
+	pedra = display.newImage('img/pedra.png')
+	pedra.x = screen_width - 150
+	pedra.y = screen_height - 70
 	pedra.cos = 0
 	pedra.sin = 0
 	pedra.speed = .2
 	pedra.can_shot = true
+
+	planta = display.newImage('img/plantas.png')
+	planta.x = screen_width
+	planta.y = screen_height
+
 
 	function pedra:collision( event )
 		if event.other.name == 'balloon' and event.other.isAlive == true then
@@ -123,12 +143,23 @@ local function init( )
 			timer.performWithDelay( 10, function() physics.addBody(agua) end, 1)
 		end
 
+		elseif event.other.name == 'agua' and event.other.isAlive == true then
+		event.other:setSequence('crescendo')
+		event.other:play()
+		event.other.isAlive = false
+
+
 	end
 	pedra:addEventListener ('collision', pedra)
 	physics.addBody(pedra, 'kinematic')
 	pedra.isSensor = true
 	
 	front:insert( floor)
+
+	function agua:collision( event )
+		if( event.phase == 'began') then
+
+	end
 
 end
 
@@ -170,8 +201,8 @@ local function update()
 	pedra.x = pedra.x + (pedra.cos * pedra.speed )
 	pedra.y = pedra.y + (pedra.sin * pedra.speed )
 	if pedra.x < 0 or pedra.x > screen_width or pedra.y < 0 or pedra.y > screen_height then
-		pedra.x = screen_center_x
-		pedra.y = screen_height - 20
+		pedra.x = screen_width - 150
+		pedra.y = screen_height - 70
 		pedra.cos = 0
 		pedra.sin = 0
 		pedra.can_shot = true
